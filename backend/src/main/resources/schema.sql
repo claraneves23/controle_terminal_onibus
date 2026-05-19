@@ -9,7 +9,7 @@
 -- ---------------------------------------------------------------------
 
 CREATE TABLE terminal (
-    id_terminal SERIAL PRIMARY KEY,
+    id_terminal BIGSERIAL PRIMARY KEY,
     nm_terminal VARCHAR(100) NOT NULL,
     ds_endereco VARCHAR(200),
     nm_cidade   VARCHAR(80)  NOT NULL,
@@ -17,8 +17,8 @@ CREATE TABLE terminal (
 );
 
 CREATE TABLE doca (
-    id_doca        SERIAL PRIMARY KEY,
-    id_terminal    INTEGER     NOT NULL REFERENCES terminal(id_terminal),
+    id_doca        BIGSERIAL PRIMARY KEY,
+    id_terminal    BIGINT     NOT NULL REFERENCES terminal(id_terminal),
     cd_doca        VARCHAR(20) NOT NULL,
     ds_localizacao VARCHAR(150),
     status_doca    VARCHAR(30) NOT NULL DEFAULT 'DISPONIVEL',
@@ -28,8 +28,8 @@ CREATE TABLE doca (
 );
 
 CREATE TABLE estacionamento (
-    id_estacionamento     SERIAL PRIMARY KEY,
-    id_terminal           INTEGER      NOT NULL REFERENCES terminal(id_terminal),
+    id_estacionamento     BIGSERIAL PRIMARY KEY,
+    id_terminal           BIGINT      NOT NULL REFERENCES terminal(id_terminal),
     nm_estacionamento     VARCHAR(100) NOT NULL,
     capacidade            INTEGER      NOT NULL,
     status_estacionamento VARCHAR(30)  NOT NULL DEFAULT 'ATIVO',
@@ -42,8 +42,8 @@ CREATE TABLE estacionamento (
 );
 
 CREATE TABLE vaga_estacionamento (
-    id_vaga           SERIAL PRIMARY KEY,
-    id_estacionamento INTEGER     NOT NULL REFERENCES estacionamento(id_estacionamento),
+    id_vaga           BIGSERIAL PRIMARY KEY,
+    id_estacionamento BIGINT     NOT NULL REFERENCES estacionamento(id_estacionamento),
     cd_vaga           VARCHAR(20) NOT NULL,
     status_vaga       VARCHAR(30) NOT NULL DEFAULT 'LIVRE',
 
@@ -52,7 +52,7 @@ CREATE TABLE vaga_estacionamento (
 );
 
 CREATE TABLE veiculo (
-    id_veiculo             SERIAL PRIMARY KEY,
+    id_veiculo             BIGSERIAL PRIMARY KEY,
     nr_placa               VARCHAR(10)  NOT NULL UNIQUE,
     tp_veiculo             VARCHAR(40)  NOT NULL,
     nm_empresa_responsavel VARCHAR(150) NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE veiculo (
 );
 
 CREATE TABLE usuario (
-    id_usuario      SERIAL PRIMARY KEY,
+    id_usuario      BIGSERIAL PRIMARY KEY,
     nm_usuario      VARCHAR(100) NOT NULL,
     ds_email        VARCHAR(120) UNIQUE,
     perfil          VARCHAR(40)  NOT NULL,
@@ -81,12 +81,12 @@ CREATE TABLE usuario (
 );
 
 CREATE TABLE operacao_carga (
-    id_operacao     SERIAL PRIMARY KEY,
-    id_terminal     INTEGER     NOT NULL REFERENCES terminal(id_terminal),
-    id_doca         INTEGER     REFERENCES doca(id_doca),
-    id_vaga         INTEGER     REFERENCES vaga_estacionamento(id_vaga),
-    id_veiculo      INTEGER     REFERENCES veiculo(id_veiculo),
-    id_usuario      INTEGER     REFERENCES usuario(id_usuario),
+    id_operacao     BIGSERIAL PRIMARY KEY,
+    id_terminal     BIGINT     NOT NULL REFERENCES terminal(id_terminal),
+    id_doca         BIGINT     REFERENCES doca(id_doca),
+    id_vaga         BIGINT     REFERENCES vaga_estacionamento(id_vaga),
+    id_veiculo      BIGINT     REFERENCES veiculo(id_veiculo),
+    id_usuario      BIGINT     REFERENCES usuario(id_usuario),
 
     tp_operacao     VARCHAR(30) NOT NULL,
     status_operacao VARCHAR(30) NOT NULL DEFAULT 'AGENDADA',
@@ -118,8 +118,8 @@ CREATE TABLE operacao_carga (
 );
 
 CREATE TABLE documento_carga (
-    id_documento SERIAL PRIMARY KEY,
-    id_operacao  INTEGER     NOT NULL REFERENCES operacao_carga(id_operacao),
+    id_documento BIGSERIAL PRIMARY KEY,
+    id_operacao  BIGINT     NOT NULL REFERENCES operacao_carga(id_operacao),
     tp_documento VARCHAR(50) NOT NULL,
     nr_documento VARCHAR(80) NOT NULL,
     dt_emissao   DATE,
@@ -130,7 +130,7 @@ CREATE TABLE documento_carga (
 );
 
 CREATE TABLE tipo_incidente (
-    id_tipo_incidente SERIAL PRIMARY KEY,
+    id_tipo_incidente BIGSERIAL PRIMARY KEY,
     nm_tipo_incidente VARCHAR(100) NOT NULL UNIQUE,
     ds_tipo_incidente TEXT,
     nivel_gravidade   VARCHAR(30)  NOT NULL DEFAULT 'BAIXO',
@@ -140,14 +140,14 @@ CREATE TABLE tipo_incidente (
 );
 
 CREATE TABLE incidente (
-    id_incidente        SERIAL PRIMARY KEY,
-    id_tipo_incidente   INTEGER     NOT NULL REFERENCES tipo_incidente(id_tipo_incidente),
-    id_terminal         INTEGER     NOT NULL REFERENCES terminal(id_terminal),
-    id_doca             INTEGER     REFERENCES doca(id_doca),
-    id_estacionamento   INTEGER     REFERENCES estacionamento(id_estacionamento),
-    id_vaga             INTEGER     REFERENCES vaga_estacionamento(id_vaga),
-    id_operacao         INTEGER     REFERENCES operacao_carga(id_operacao),
-    id_usuario_registro INTEGER     REFERENCES usuario(id_usuario),
+    id_incidente        BIGSERIAL PRIMARY KEY,
+    id_tipo_incidente   BIGINT     NOT NULL REFERENCES tipo_incidente(id_tipo_incidente),
+    id_terminal         BIGINT     NOT NULL REFERENCES terminal(id_terminal),
+    id_doca             BIGINT     REFERENCES doca(id_doca),
+    id_estacionamento   BIGINT     REFERENCES estacionamento(id_estacionamento),
+    id_vaga             BIGINT     REFERENCES vaga_estacionamento(id_vaga),
+    id_operacao         BIGINT     REFERENCES operacao_carga(id_operacao),
+    id_usuario_registro BIGINT     REFERENCES usuario(id_usuario),
 
     dt_incidente        TIMESTAMP   NOT NULL,
     ds_incidente        TEXT        NOT NULL,
